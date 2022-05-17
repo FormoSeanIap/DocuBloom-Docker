@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  docubloom:
+    container_name: 'docubloom'
+    image: formosean/docubloom
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - 'my-net'
+  nginx:
+    container_name: 'nginx'
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    volumes:
+      - type: bind
+        source: /home/ec2-user/docker-compose/nginx.conf
+        target: /etc/nginx/nginx.conf
+    depends_on:
+      - docubloom
+    restart: always
+    networks:
+      - 'my-net'
+networks:
+  my-net:
+    driver: 'bridge'
